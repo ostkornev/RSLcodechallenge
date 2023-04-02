@@ -1,0 +1,65 @@
+﻿@model RSLQLDChallangeApp.ViewModels.LotteryViewModel
+@{
+    ViewData["Title"] = "Lottery Results";
+}
+
+<!--The view  renders an HTML table to display the lottery draws -->
+<h1>Lottery Results</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Logo</th>
+            <th>Product</th>
+            <th>Draw Number</th>
+            <th>Draw Date</th>
+            <th>Jackpot Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var draw in Model.Draws)
+        {
+            <tr>
+                <td><img class="lottery-logo" data-src="@draw.DrawLogoUrl" alt="@draw.ProductId logo" style="width: 50px; height: auto;"></td>
+                <td>@draw.DrawDisplayName</td>
+                <td>@draw.DrawNumber</td>
+                <td>@draw.DrawDate.ToString("yyyy-MM-dd")</td>
+                <td>@draw.Div1Amount.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@section Scripts {
+    <script>
+        function imageExists(url, callback) {
+            var img = new Image();
+            img.onload = function () { callback(true); };
+            img.onerror = function () { callback(false); };
+            img.src = url;
+        }
+
+        function setImageSource(img, url, fallbackUrl) {
+            imageExists(url, function (exists) {
+                if (exists) {
+                    img.src = url;
+                } else {
+                    img.src = fallbackUrl;
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var images = document.getElementsByClassName('lottery-logo');
+            var fallbackUrl = '/path/to/your/fallback/image.png'; // Set the fallback image URL here
+
+            for (var i = 0; i < images.length; i++) {
+                var img = images[i];
+                var url = img.getAttribute('data-src');
+                setImageSource(img, url, fallbackUrl);
+            }
+        });
+    </script>
+}
